@@ -26,5 +26,5 @@ double pthread_compute_pi(int num_threads, int num_samples, int S)
 
     destroy(&(pi_calc->lock));
     
-    return pi_calc->global_sum / (1.0*num_threads*num_samples);
+    return 4.0 * pi_calc->global_sum / (1.0*num_threads*num_samples);
 }
