@@ -4,12 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include "lock.hpp"
 
 typedef struct __calc_t
 {
     int global_sum;
     int global_n_samples;
     int global_n_threads;
+    lock_t lock;
 } calc_t;
 
 typedef struct __thread_data_t

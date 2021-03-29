@@ -10,6 +10,8 @@ double pthread_compute_pi(int num_threads, int num_samples, int S)
     pthread_t* threads = (pthread_t*)malloc(num_threads*sizeof(pthread_t));
     thread_data_t* thread_data = (thread_data_t*)malloc(num_threads*sizeof(thread_data_t));
 
+    init(&(pi_calc->lock));
+
     for (int i = 0; i < num_threads; i++)
     {
         thread_data[i].pi_calc = pi_calc;
@@ -21,6 +23,8 @@ double pthread_compute_pi(int num_threads, int num_samples, int S)
 
     free(threads);
     free(thread_data);
+
+    destroy(&(pi_calc->lock));
     
     return pi_calc->global_sum / (1.0*num_threads*num_samples);
 }
