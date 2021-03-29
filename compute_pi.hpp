@@ -1,27 +1,26 @@
-#ifndef COMPUTE_PI_HPP
-#define COMPUTE_PI_HPP
+#ifndef HW3_SRC_COMPUTE_PI_HPP
+#define HW3_SRC_COMPUTE_PI_HPP
 
-// Sloppiness Factor
-int S;
-int global_sum;
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+
+typedef struct __calc_t
+{
+    int global_sum;
+    int global_n_samples;
+    int global_n_threads;
+} calc_t;
+
+typedef struct __thread_data_t
+{
+    calc_t* pi_calc;
+    int thread_id;
+} thread_data_t;
 
 void* compute_pi(void* arg);
 
-void pthread_compute_pi(int num_threads, int num_samples)
-{
-    global_sum = 0;
-
-    pthread_t* threads = (pthread_t*)malloc(num_threads*sizeof(pthread_t));
-    for (int i = 0; i < num_threads; i++)
-        pthread_create(&(threads[i]), NULL, compute_pi, NULL);
-    for (int i = 0; i < n_threads; i++)
-        pthread_join(threads[i], NULL);
-
-    free(threads);
-    
-    return global_sum;
-}
-
+double pthread_compute_pi(int num_threads, int num_samples, int S);
 
 
 #endif
