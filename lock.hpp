@@ -7,6 +7,7 @@
 #include <pthread.h>
 #include <sched.h>
 #include "queue.hpp"
+#include <signal.h>
 
 typedef struct __lock_t
 {
