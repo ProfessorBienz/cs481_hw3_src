@@ -20,7 +20,7 @@ typedef struct __lock_t
     // Needed for queue lock
     int flag;
     int guard;
-    queue_t* queue;
+    queue_t queue;
 } lock_t;
 
 void init(lock_t* lock);
