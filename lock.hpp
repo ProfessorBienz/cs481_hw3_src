@@ -1,8 +1,6 @@
 #ifndef HW3_SRC_LOCK_HPP
 #define HW3_SRC_LOCK_HPP
 
-#define _GNU_SOURCE
-
 #include <unistd.h>
 #include <pthread.h>
 #include <sched.h>

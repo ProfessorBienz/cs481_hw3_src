@@ -1,4 +1,5 @@
 #include "compute_pi.hpp"
+#include "lock.hpp"
 
 double pthread_compute_pi(int num_threads, int num_samples, int S)
 {
