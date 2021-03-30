@@ -2,7 +2,7 @@
 
 void queue_init(queue_t* queue)
 {
-    queue* =  (queue_t*)malloc(sizeof(queue_t));
+    queue =  (queue_t*)malloc(sizeof(queue_t));
 }
 
 int queue_empty(queue_t* queue)
