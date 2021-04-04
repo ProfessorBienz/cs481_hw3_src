@@ -1,5 +1,6 @@
 #include "compute_pi.hpp"
 #include "lock.hpp"
+#include "my_intercept.hpp"
 
 double pthread_compute_pi(int num_threads, int num_samples, int S)
 {
@@ -12,6 +13,7 @@ double pthread_compute_pi(int num_threads, int num_samples, int S)
     thread_data_t* thread_data = (thread_data_t*)malloc(num_threads*sizeof(thread_data_t));
 
     init(&(pi_calc->lock));
+    rand_init(num_samples);
 
     for (int i = 0; i < num_threads; i++)
     {
@@ -24,6 +26,8 @@ double pthread_compute_pi(int num_threads, int num_samples, int S)
 
     free(threads);
     free(thread_data);
+
+    rand_destroy();
 
     destroy(&(pi_calc->lock));
     

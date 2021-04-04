@@ -11,12 +11,47 @@ int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
-
 }
 
 TEST(TLBTest, TestsIntests)
 {
     double global_sum;
-    global_sum = pthread_compute_pi(1, 10000, 0);    
-    printf("Sum %e\n", global_sum);
+    global_sum = pthread_compute_pi(1, 1000, 0);    
+    ASSERT_NEAR(global_sum, 3.14, 1);
+
+    global_sum = pthread_compute_pi(2, 1000, 0);    
+    ASSERT_NEAR(global_sum, 3.14, 1);
+
+    global_sum = pthread_compute_pi(4, 1000, 0);    
+    ASSERT_NEAR(global_sum, 3.14, 1);
+
+    global_sum = pthread_compute_pi(8, 1000, 0);    
+    ASSERT_NEAR(global_sum, 3.14, 1);
+
+
+
+    global_sum = pthread_compute_pi(1, 100000, 0);    
+    ASSERT_NEAR(global_sum, 3.14, 0.1);
+
+    global_sum = pthread_compute_pi(2, 100000, 0);
+    ASSERT_NEAR(global_sum, 3.14, 0.1);
+
+    global_sum = pthread_compute_pi(4, 100000, 0);
+    ASSERT_NEAR(global_sum, 3.14, 0.1);
+
+    global_sum = pthread_compute_pi(8, 100000, 0);
+    ASSERT_NEAR(global_sum, 3.14, 0.1);
+
+    
+    global_sum = pthread_compute_pi(1, 1000000, 0);    
+    ASSERT_NEAR(global_sum, 3.14, 0.01);
+
+    global_sum = pthread_compute_pi(2, 1000000, 0);    
+    ASSERT_NEAR(global_sum, 3.14, 0.01);
+
+    global_sum = pthread_compute_pi(4, 1000000, 0);    
+    ASSERT_NEAR(global_sum, 3.14, 0.01);
+
+    global_sum = pthread_compute_pi(8, 1000000, 0);    
+    ASSERT_NEAR(global_sum, 3.14, 0.01);
 }

@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include "lock.hpp"
+#include "intercept.hpp"
 
 typedef struct __calc_t
 {
