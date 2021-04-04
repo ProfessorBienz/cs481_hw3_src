@@ -4,9 +4,17 @@
 #include <pthread.h>
 #include <queue>
 
+typedef struct __node_t
+{
+    struct __node_t* next;
+    pthread_t thread;
+} node_t;
+
 typedef struct __queue_t
 {
-    std::queue<pthread_t> pthread_queue;
+    node_t* head;
+    node_t* tail;
+    int size;
 } queue_t;
 
 void queue_init(queue_t& queue);
