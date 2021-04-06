@@ -9,7 +9,7 @@
 
 int n;
 lock_t my_lock;
-volatile int global_sum;
+int global_sum;
 void* thread_add(void* arg)
 {
     for (int i = 0; i < n; i++)
@@ -18,6 +18,7 @@ void* thread_add(void* arg)
         global_sum++;
         unlock(&my_lock);
     }
+    printf("Ticket %d, Turn %d, Global Sum %d\n", my_lock.ticket, my_lock.turn, global_sum);
 
     return NULL;
 }
@@ -31,7 +32,7 @@ int main(int argc, char** argv)
 TEST(TLBTest, TestsIntests)
 {
     init(&my_lock);
-    n = 100;
+    n = 1000;
     global_sum = 0;
     int num_threads = 2;
     pthread_t* threads = (pthread_t*)malloc(num_threads*sizeof(pthread_t));
