@@ -11,25 +11,28 @@ lock_t my_lock;
 int val;
 int finished;
 
+void sig_handler(int signum)
+{
+}
+
 void* thread0(void* arg)
 {
     lock(&my_lock);
     while (queue_empty(my_lock.queue)) 
         sched_yield();
     unlock(&my_lock);
-    printf("queue not empty\n");
-    val *= 2;
+    for (int i = 0; i < 10000; i++)
+        val--;
 
-    printf("val %d\n", val);
     return NULL;
 }
 
 void* thread1(void* arg)
 {
-    val += 1;
-    printf("val %d\n", val);
+    signal(SIGUSR1, sig_handler);
+    for (int i = 0; i < 10000; i++)
+        val++;
     lock(&my_lock);
-    printf("Hvae lock...\n");
     unlock(&my_lock);
     finished = 1;
 
@@ -45,7 +48,7 @@ int main(int argc, char** argv)
 TEST(TLBTest, TestsIntests)
 {
     init(&my_lock);
-    val = 0;
+    val = 1;
     finished = 0;
 
     pthread_t pthread0;
@@ -55,15 +58,14 @@ TEST(TLBTest, TestsIntests)
     pthread_create(&pthread1, NULL, thread1, NULL);
 
     pthread_join(pthread0, NULL);
-    printf("pthread0 returned\n");
     while (!finished)
     { 
-        pthread_kill(pthread1, SIGCONT);
+        pthread_kill(pthread1, SIGUSR1);
         sched_yield();
     }
     pthread_join(pthread1, NULL);
 
-    ASSERT_EQ(val, 2);
+    ASSERT_EQ(val, 1);
 
     destroy(&my_lock);
 }
