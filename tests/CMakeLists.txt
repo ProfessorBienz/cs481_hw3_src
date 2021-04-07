@@ -17,10 +17,6 @@ add_executable(test_lock_yield test_lock.cpp)
 target_link_libraries(test_lock_yield hw3_ticket_yield googletest)
 add_test(TestAdditionYield ./test_lock_yield)
 
-add_executable(test_lock_semaphore test_lock.cpp)
-target_link_libraries(test_lock_semaphore hw3_semaphore googletest)
-add_test(TestAdditionSemaphore ./test_lock_semaphore)
-
 add_executable(test_spin_lock test_spin_lock.cpp)
 target_link_libraries(test_spin_lock hw3_ticket_spin googletest)
 add_test(TestSpinLock ./test_spin_lock)
