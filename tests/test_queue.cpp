@@ -11,7 +11,7 @@ lock_t my_lock;
 int val;
 int finished;
 
-void sig_handler(int signum)
+void queue_sig_handler(int signum)
 {
 }
 
@@ -29,7 +29,7 @@ void* thread0(void* arg)
 
 void* thread1(void* arg)
 {
-    signal(SIGUSR1, sig_handler);
+    signal(SIGUSR1, queue_sig_handler);
     for (int i = 0; i < 10000; i++)
         val++;
     lock(&my_lock);
