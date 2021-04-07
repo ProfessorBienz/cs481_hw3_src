@@ -20,6 +20,7 @@ void queue_add(queue_t& queue, pthread_t thread)
 {
     node_t* new_node = (node_t*)malloc(sizeof(node_t));
     new_node->next = NULL;
+    new_node->thread = thread;
     queue.tail->next = new_node;
     queue.size++; 
 }
