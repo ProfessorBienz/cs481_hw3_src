@@ -5,6 +5,10 @@ add_executable(test_pi test_pi.cpp)
 target_link_libraries(test_pi hw3_mutex googletest)
 add_test(TestPI ./test_pi)
 
+add_executable(test_pi_uneven test_pi_uneven.cpp)
+target_link_libraries(test_pi_uneven hw3_mutex googletest)
+add_test(TestPIUneven ./test_pi_uneven)
+
 add_executable(test_pi_yield test_pi.cpp)
 target_link_libraries(test_pi_yield hw3_ticket_yield googletest )
 add_test(TestPIYield ./test_pi_yield)

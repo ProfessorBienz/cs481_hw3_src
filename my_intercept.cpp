@@ -28,3 +28,9 @@ int my_rand()
 {
     return my_rand_vals[my_rand_ctr++];
 }
+
+void zero_vals(int global_n)
+{
+  for (int i = 0; i < 2*global_n; i++)
+      my_rand_vals[i] = 0.5*RAND_MAX;
+}
