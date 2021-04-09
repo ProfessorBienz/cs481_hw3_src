@@ -6,33 +6,46 @@
 
 #include "gtest/gtest.h"
 #include "hw3_src/lock.hpp"
+#include <sys/time.h>
 
 lock_t my_lock;
-int val;
-int finished;
+bool first, timed_out;
+bool thread0bool, thread1bool;
 
-void queue_sig_handler(int signum)
+void timeout_sig_handler(int signum)
 {
+    timed_out = true;
+    unlock(&my_lock);
 }
 
-void* thread0(void* arg)
+void* thread1(void* arg)
 {
     lock(&my_lock);
-    for (int i = 0; i < 10000; i++)
-        val--;
+    thread0bool = first==false;
+    first = true;
     unlock(&my_lock);
 
     return NULL;
 }
 
-void* thread1(void* arg)
+void* thread0(void* arg)
 {
-    while (my_lock.S > 0)
+    while (my_lock.S > 0 && !first)
+        sched_yield();
+    while (my_lock.S <= 0) 
         sched_yield();
     lock(&my_lock);
+    thread1bool = first==true;
     unlock(&my_lock);
-    for (int i = 0; i < 10000; i++)
-        val++;
+
+    return NULL;
+}
+
+void* thread_timeout(void* arg)
+{
+    signal(SIGUSR1, timeout_sig_handler);
+    lock(&my_lock);
+    lock(&my_lock);
 
     return NULL;
 }
@@ -43,11 +56,15 @@ int main(int argc, char** argv)
     return RUN_ALL_TESTS();
 }
 
+void timer_handler(int signum)
+{
+    timed_out = true;
+}
+
 TEST(TLBTest, TestsIntests)
 {
     init(&my_lock);
-    val = 1;
-    finished = 0;
+    first = false;
 
     pthread_t pthread0;
     pthread_t pthread1;
@@ -58,7 +75,16 @@ TEST(TLBTest, TestsIntests)
     pthread_join(pthread0, NULL);
     pthread_join(pthread1, NULL);
 
-    ASSERT_EQ(val, 1);
+    ASSERT_EQ(thread0bool, true);
+    ASSERT_EQ(thread1bool, true);
+
+    timed_out = false;
+    pthread_create(&pthread0, NULL, thread_timeout, NULL);
+    sleep(2);
+    pthread_kill(pthread0, SIGUSR1);
+    pthread_join(pthread0, NULL);
+    ASSERT_EQ(timed_out, true);
+
 
     destroy(&my_lock);
 }
