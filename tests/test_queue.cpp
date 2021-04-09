@@ -9,7 +9,9 @@
 
 lock_t my_lock;
 int val;
-int finished;
+bool first;
+bool finished0, finished1;
+bool thread0bool, thread1bool;
 
 void queue_sig_handler(int signum)
 {
@@ -21,8 +23,9 @@ void* thread0(void* arg)
     while (queue_empty(my_lock.queue)) 
         sched_yield();
     unlock(&my_lock);
-    for (int i = 0; i < 10000; i++)
-        val--;
+    thread0bool = first==true;
+
+    finished0 = true;
 
     return NULL;
 }
@@ -30,11 +33,12 @@ void* thread0(void* arg)
 void* thread1(void* arg)
 {
     signal(SIGUSR1, queue_sig_handler);
-    for (int i = 0; i < 10000; i++)
-        val++;
+    thread1bool = first==false;
+    first = true;
     lock(&my_lock);
     unlock(&my_lock);
-    finished = 1;
+    
+    finished1 = true;
 
     return NULL;
 }
@@ -48,24 +52,24 @@ int main(int argc, char** argv)
 TEST(TLBTest, TestsIntests)
 {
     init(&my_lock);
-    val = 1;
-    finished = 0;
+    first = false;
+    finished0 = finished1 = false;
 
     pthread_t pthread0;
     pthread_t pthread1;
 
     pthread_create(&pthread0, NULL, thread0, NULL);
     pthread_create(&pthread1, NULL, thread1, NULL);
-
     pthread_join(pthread0, NULL);
-    while (!finished)
-    { 
+    while (!finished1)
+    {
         pthread_kill(pthread1, SIGUSR1);
         sched_yield();
     }
     pthread_join(pthread1, NULL);
 
-    ASSERT_EQ(val, 1);
+    ASSERT_EQ(thread0bool, true);
+    ASSERT_EQ(thread1bool, true);
 
     destroy(&my_lock);
 }
