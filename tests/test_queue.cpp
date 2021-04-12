@@ -35,6 +35,8 @@ void* thread1(void* arg)
     signal(SIGUSR1, queue_sig_handler);
     thread1bool = first==false;
     first = true;
+    while (my_lock.flag == 0)
+        sched_yield();
     lock(&my_lock);
     unlock(&my_lock);
     
